@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import SearchBar from "./SearchBarCard";
 import Rating from "./RatingCard";
-import { getGithubRepo } from "../api/searchGithubRepos";
-import { Meteor } from "meteor/meteor";
+// import { getGithubRepo } from "../api/searchGithubRepos";
+// import { Meteor } from "meteor/meteor";
 
 const RatingModule = props => {
   const [loading, setLoading] = React.useState(false);
@@ -12,17 +12,38 @@ const RatingModule = props => {
   const [rating, setRating] = React.useState({ ok: false, result: null });
 
   async function handleSearch(searchField) {
-    await setLoading(true);
-    // const result = await getGithubRepo(searchField);
-    await Meteor.call("searchGithubRepos.find", searchField, (err, res) => {
-      if (err) {
-        setError(err);
-      } else {
-        setRating(res);
-        setLoading(false);
-        return res;
-      }
-    });
+    // METEOR METHOD CALL TEST
+    //
+    // await Meteor.call("searchGithubRepos.find", searchField, (err, res) => {
+    //   if (err) {
+    //     setError(err);
+    //   } else {
+    //     setRating(res);
+    //     setLoading(false);
+    //     return res;
+    //   }
+    // });
+    // END TEST
+
+    // validating fields and path
+    if (searchField.split("/").length !== 2 || !searchField.split("/")[1]) {
+      await setRating({
+        ok: false,
+        result: { message: "please, type 'user/repository' and try again" }
+      });
+      await setError(true);
+    } else {
+      // starts the request
+      await setLoading(true);
+      const result = await fetch("/api/v1/rating/" + searchField);
+      const jsonRes = await result.json();
+      await setRating(jsonRes);
+      await setLoading(false);
+    }
+  }
+
+  function handleOnChange(searchField) {
+    setError(searchField.split("/").length !== 2 || !searchField.split("/")[1]);
   }
 
   useEffect(() => {
@@ -37,8 +58,13 @@ const RatingModule = props => {
         backgroundColor: "#3f51b53d"
       }}
     >
-      <SearchBar handleSearch={handleSearch} />
-      <Rating rating={rating} />
+      <SearchBar
+        handleSearch={handleSearch}
+        handleOnChange={handleOnChange}
+        loading={loading}
+        error={error}
+      />
+      <Rating rating={rating} loading={loading} />
     </Paper>
   );
 };

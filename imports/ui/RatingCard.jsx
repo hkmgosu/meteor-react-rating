@@ -34,7 +34,7 @@ export default function Rating(props) {
 
   const Message =
     rating.result === null ? (
-      <Grid item xs={10}>
+      <Grid item xs={10} className={classes.paper}>
         <Typography gutterBottom variant="h6" align="center">
           Want to know how stable and mature a GitHub-repository is?
         </Typography>
@@ -43,7 +43,7 @@ export default function Rating(props) {
         </Typography>
       </Grid>
     ) : (
-      <Grid item xs={10}>
+      <Grid item xs={10} className={classes.paper}>
         <Typography gutterBottom variant="h6" align="center" color="error">
           {`search repository results: ${rating.result.message}`}
         </Typography>
@@ -58,7 +58,7 @@ export default function Rating(props) {
             <img
               className={classes.img}
               alt="user avatar"
-              src={rating.ok ? rating.result.owner.avatar_url : ""}
+              src={rating.ok ? rating.result.owner_avatar_url : ""}
             />
           </ButtonBase>
         </Grid>
@@ -74,11 +74,11 @@ export default function Rating(props) {
                 {rating.ok ? `Name: ${rating.result.name}` : ""}
               </Typography>
               <Typography variant="body2" color="textSecondary">
-                {rating.ok ? `Owner: ${rating.result.owner.login}` : ""}
+                {rating.ok ? `Owner: ${rating.result.owner_login}` : ""}
               </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="body2" style={{ cursor: "pointer" }}>
+              <Typography variant="body2">
                 {rating.ok
                   ? `last update: ${moment(rating.result.updated_at).format(
                       "LL"

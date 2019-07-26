@@ -5,6 +5,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import Button from "@material-ui/core/Button";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -60,6 +61,12 @@ export default function SearchAppBar(props) {
   const classes = useStyles();
   const [searchField, setSearchField] = React.useState("");
 
+  async function handleOnChange(value) {
+    console.log("valll", value);
+    await setSearchField(value);
+    await props.handleOnChange(value);
+  }
+
   return (
     <AppBar position="static">
       <Toolbar disableGutters className={classes.toolbar}>
@@ -68,6 +75,7 @@ export default function SearchAppBar(props) {
             <SearchIcon />
           </div>
           <InputBase
+            id="github-input"
             placeholder="Github Repository: e.g. hkmgosu/yourtracker"
             classes={{
               root: classes.inputRoot,
@@ -75,11 +83,15 @@ export default function SearchAppBar(props) {
             }}
             inputProps={{ "aria-label": "Search" }}
             value={searchField}
-            onChange={event => setSearchField(event.target.value)}
+            onChange={event => handleOnChange(event.target.value)}
           />
         </div>
         <div className={classes.grow} />
-        <Button color="inherit" onClick={() => props.handleSearch(searchField)}>
+        <Button
+          color="inherit"
+          onClick={() => props.handleSearch(searchField)}
+          disabled={props.loading || props.error}
+        >
           Search
         </Button>
       </Toolbar>
