@@ -15,7 +15,7 @@ meteor npm install
 ### How to run it?
 
 ```javascript
-meteor;
+meteor
 ```
 
 ### Test
