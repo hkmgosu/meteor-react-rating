@@ -7,9 +7,12 @@ import router from "router";
 import mcache from "memory-cache";
 
 const endpoint = router();
+const GITHUB_API = "https://api.github.com/repos/";
 
 if (Meteor.isServer) {
   // This code only runs on the server
+
+  // get info from github
   const getGithubRepo = async url => {
     try {
       const options = {
@@ -17,12 +20,9 @@ if (Meteor.isServer) {
           "User-Agent": "request"
         }
       };
-      const repoInfo = await HTTP.get(
-        "https://api.github.com/repos/" + url,
-        options
-      );
+      const repoInfo = await HTTP.get(GITHUB_API + url, options);
       const repoCommits = await HTTP.get(
-        "https://api.github.com/repos/" + url + "/commits",
+        GITHUB_API + url + "/commits",
         options
       );
       // if repo exist, there is no error then and return results
@@ -75,41 +75,29 @@ if (Meteor.isServer) {
 
   // ****** api end point for github rating
 
-  endpoint.get("/api/v1/rating", (req, res) =>
+  endpoint.get("/api/v1/rating", (req, res) => {
     res.end(
       JSON.stringify({
         ok: false,
-        result: { message: "please, type user and repository and try again" }
+        result: { message: "please, type 'user/yourTracker' and try again" }
       })
-    )
-  );
+    );
+  });
 
-  endpoint.get("/api/v1/rating/:user", (req, res) =>
+  endpoint.get("/api/v1/rating/:user", (req, res) => {
     res.end(
       JSON.stringify({
         ok: false,
         result: {
-          message: `please, type repository for user '${
-            req.params.user
-          }' and try again`
+          message: `please, type '${req.params.user}/yourTracker' and try again`
         }
       })
-    )
-  );
+    );
+  });
 
   endpoint.get("/api/v1/rating/:user/:repo", async (req, res) => {
-    if (!req.params.user) {
-      console.log("no user");
-      res.end(
-        JSON.stringify({
-          ok: false,
-          result: { message: "please type a GITHUB username" }
-        })
-      );
-    }
-
+    // validate tracker name
     if (!req.params.repo) {
-      console.log("no repo");
       res.end(
         JSON.stringify({
           ok: false,
@@ -121,8 +109,7 @@ if (Meteor.isServer) {
     const userRepoPath = req.params.user + "/" + req.params.repo;
     // memory cache validation
     if (mcache.get(userRepoPath)) {
-      console.log("cacheeeee", mcache.get(userRepoPath));
-      res.setHeader("Cache-Control", "public, max-age=86400");
+      console.log("cache", mcache.get(userRepoPath));
       res.end(mcache.get(userRepoPath));
     } else {
       console.log("no cache");
@@ -131,7 +118,6 @@ if (Meteor.isServer) {
       );
       // only save an existing repo in cache
       if (result.ok) mcache.put(userRepoPath, JSON.stringify(result), 86400);
-      res.setHeader("Cache-Control", "public, max-age=86400");
       res.end(JSON.stringify(result));
     }
   });

@@ -6,6 +6,8 @@ import Rating from "./RatingCard";
 // import { getGithubRepo } from "../api/searchGithubRepos";
 // import { Meteor } from "meteor/meteor";
 
+// RATING UI MODULE
+
 const RatingModule = props => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(false);
@@ -45,10 +47,6 @@ const RatingModule = props => {
   function handleOnChange(searchField) {
     setError(searchField.split("/").length !== 2 || !searchField.split("/")[1]);
   }
-
-  useEffect(() => {
-    console.log("state", { loading, error, rating });
-  });
 
   return (
     <Paper

@@ -5,6 +5,8 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import RatingModule from "./RatingModule";
 
+// cointainer por all components
+
 const App = () => (
   <Box>
     <Container maxWidth="lg" fixed>

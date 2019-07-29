@@ -62,7 +62,6 @@ export default function SearchAppBar(props) {
   const [searchField, setSearchField] = React.useState("");
 
   async function handleOnChange(value) {
-    console.log("valll", value);
     await setSearchField(value);
     await props.handleOnChange(value);
   }
