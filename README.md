@@ -1,6 +1,6 @@
 # METEOR REACT RATING
 
-Project based in meteor, react 16v+ for getting repositories ratings
+Project based in meteor, react 16v+ & material-ui for getting repositories ratings
 
 ### Prerequisites
 
