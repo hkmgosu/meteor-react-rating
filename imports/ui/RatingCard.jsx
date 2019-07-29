@@ -30,8 +30,6 @@ export default function Rating(props) {
   const classes = useStyles();
   const rating = props.rating;
 
-  console.log("rating?", rating);
-
   const Message =
     rating.result === null ? (
       <Grid item xs={10} className={classes.paper}>
