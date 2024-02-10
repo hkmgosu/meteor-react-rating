@@ -1,6 +1,8 @@
-# METEOR REACT RATING
+# METEOR REACT RATING: Stars Rating for Github repositories using their services.
 
-Project based in meteor, react 16v+ & material-ui for getting repositories ratings
+(test for hikey.io)
+
+Project based in meteor, react 16v+ & material-ui 
 
 ### Prerequisites
 
